@@ -66,7 +66,8 @@ National Park.
 data("faithful")
 # Basic scatterplot
 ggplot(data = faithful, 
-       mapping = aes(x = eruptions, y = waiting)) + 
+       mapping = aes(x = eruptions, 
+                     y = waiting)) + 
   geom_point()
 # Data and mapping can be given both as global (in ggplot()) or per layer
 ggplot() + 
@@ -78,14 +79,17 @@ If an aesthetic is linked to data it is put into `aes()`
 
 ```{r}
 ggplot(faithful) + 
-  geom_point(aes(x = eruptions, y = waiting, colour = eruptions < 3))
+  geom_point(aes(x = eruptions, 
+                 y = waiting, 
+                 colour = eruptions < 3))
 ```
 
 If you simple want to set it to a value, put it outside of `aes()`
 
 ```{r}
 ggplot(faithful) + 
-  geom_point(aes(x = eruptions, y = waiting),
+  geom_point(aes(x = eruptions, 
+                 y = waiting),
              colour = 'steelblue')
 ```
 
@@ -112,11 +116,15 @@ See `?geom_point` for more information on the point layer.
 
 ```{r}
 ggplot(faithful) + 
-  geom_point(aes(x = eruptions, y = waiting))
+  geom_point(aes(x = eruptions, y = waiting),
+             shape = "square", 
+             size = 2, 
+             alpha = 0.5)
+?geom_point
 ```
 
 Hint 1: transparency is controlled with `alpha`, and shape with `shape`
-Hint 2: rememberthe difference between mapping and setting aesthetics
+Hint 2: remember the difference between mapping and setting aesthetics
 
 * * *
 
@@ -124,7 +132,8 @@ Colour the two distributions in the histogram with different colours
 
 ```{r}
 ggplot(faithful) + 
-  geom_histogram(aes(x = eruptions))
+  geom_histogram(aes(x = eruptions,fill = eruptions < 3.1))
+?geom_histogram
 ```
 
 Hint 1: For polygons you can map two different colour-like aesthetics: `colour` 
@@ -137,7 +146,10 @@ Colour the distributions in the histogram by whether `waiting` is above or below
 
 ```{r}
 ggplot(faithful) + 
-  geom_histogram(aes(x = eruptions))
+  geom_histogram(aes(x = eruptions,fill = faithful$waiting <60), 
+                 position = "identity", 
+                 alpha =0.4)
+?geom_histogram
 ```
 
 Change the plot above by setting `position = 'dodge'` in `geom_histogram()` 
@@ -150,7 +162,10 @@ how to draw straight lines from a slope and intercept.
 
 ```{r}
 ggplot(faithful) + 
-  geom_point(aes(x = eruptions, y = waiting))
+  geom_point(aes(x = eruptions, y = waiting)) +
+  geom_abline(slope= -40,intercept = 200)
+
+?geom_abline
 ```
 
 ### Stat
@@ -164,6 +179,7 @@ Every geom has a stat. This is why new data (`count`) can appear when using
 data("mpg")
 ggplot(mpg) + 
   geom_bar(aes(x = class))
+?geom_bar
 ```
 
 The stat can be overwritten. If we have precomputed count we don't want any 
@@ -172,8 +188,8 @@ data alone
 
 ```{r}
 library(dplyr)
-mpg_counted <- mpg %>% 
-  count(class, name = 'count')
+(mpg_counted <- mpg %>% 
+  count(class, name = 'count'))
 ggplot(mpg_counted) + 
   geom_bar(aes(x = class, y = count), stat = 'identity')
 ```
@@ -191,7 +207,8 @@ inside `aes()`. You can do all sorts of computations inside that.
 
 ```{r}
 ggplot(mpg) + 
-  geom_bar(aes(x = class, y = after_stat(100 * count / sum(count))))
+  geom_bar(aes(x = class, 
+               y = after_stat(100 * count / sum(count))))
 ```
 
 Many stats provide multiple variations of the same calculation, and provides a
@@ -206,7 +223,10 @@ While the others must be used with the `after_stat()` function
 
 ```{r}
 ggplot(mpg) + 
-  geom_density(aes(x = hwy, y = after_stat(scaled)))
+  geom_density(aes(x = hwy, 
+                   y = after_stat(scaled)))
+?stat_density
+?after_stat
 ```
 
 #### Exercises
@@ -217,7 +237,7 @@ stat it uses as default. Then modify the code to use the stat directly instead
 
 ```{r}
 ggplot(mpg) + 
-  geom_bar(aes(x = class))
+  stat_count(aes(x = class))
 ```
 
 * * *
@@ -226,7 +246,15 @@ Use `stat_summary()` to add a red dot at the mean `hwy` for each group
 
 ```{r}
 ggplot(mpg) + 
-  geom_jitter(aes(x = class, y = hwy), width = 0.2)
+  geom_jitter(aes(x = class, y = hwy), width = 0.2 ) +
+   stat_summary(aes(x = class, y = hwy),
+               fun =mean,
+               geom = "point",
+               color = "red",
+               size = 2)
+
+
+?stat_summary
 ```
 
 Hint: You will need to change the default geom of `stat_summary()`
@@ -237,7 +265,9 @@ mappings have an associated scale even if not specified.
 
 ```{r}
 ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy, colour = class))
+  geom_point(aes(x = displ, y = hwy, colour = class)) +
+  scale_colour_brewer(type="qual")
+?scale_colour_brewer
 ```
 
 take control by adding one explicitly. All scales follow the same naming 
@@ -254,8 +284,9 @@ Positional mappings (x and y) also have associated scales.
 ```{r}
 ggplot(mpg) + 
   geom_point(aes(x = displ, y = hwy)) + 
-  scale_x_continuous(breaks = c(3, 5, 6)) + 
+  scale_x_continuous(breaks = c(3, 5, 6)) +
   scale_y_continuous(trans = 'log10')
+?scale_x_continuous
 ```
 
 #### Exercises
@@ -265,7 +296,7 @@ Color Brewer and pick your favourite. Modify the code below to use it
 ```{r}
 ggplot(mpg) + 
   geom_point(aes(x = displ, y = hwy, colour = class)) + 
-  scale_colour_brewer(type = 'qual')
+  scale_colour_brewer(type = "qual")
 ```
 
 * * *
@@ -276,8 +307,9 @@ amount of cylinders (4, 5, 6, and 8) are present in the legend.
 
 ```{r}
 ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy, colour = class)) + 
-  scale_colour_brewer(type = 'qual')
+  geom_point(aes(x = displ, y = hwy, colour = class, size = cyl)) + 
+  scale_colour_brewer(type = 'qual') +
+  scale_size_area(breaks=c(4,5,6,8), max_size = 6)
 ```
 
 Hint: The `breaks` argument in the scale is used to control which values are
@@ -293,7 +325,9 @@ variable, but to the continuous `cty` variable. What happens to the guide?
 
 ```{r}
 ggplot(mpg) + 
-  geom_point(aes(x = displ, y = hwy, colour = class, size = cty))
+  geom_point(aes(x = displ, y = hwy, colour = cty, size = cty)) +
+  scale_size("CTY") +
+  guides(color="legend")
 ```
 
 * * *
