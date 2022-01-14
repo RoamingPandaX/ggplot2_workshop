@@ -362,14 +362,15 @@ ggplot(mpg) +
 
 #### Exercises
 One of the great things about facets is that they share the axes between the 
-different panels. Sometimes this is undiserable though, and the behaviour can
+different panels. Sometimes this is undesirable though, and the behavior can
 be changed with the `scales` argument. Experiment with the different possible
 settings in the plot below:
 
 ```{r}
 ggplot(mpg) + 
   geom_point(aes(x = displ, y = hwy)) + 
-  facet_wrap(~ drv)
+  facet_wrap(~ drv, scales ="fixed" )
+?facet_wrap
 ```
 
 * * *
@@ -381,7 +382,7 @@ between the panels in the plot. What happens?
 ```{r}
 ggplot(mpg) + 
   geom_bar(aes(y = manufacturer)) + 
-  facet_grid(class ~ .)
+  facet_grid(class ~ ., space ="free_y",scales = "free_y")
 ```
 
 Use the `space` argument in `facet_grid()` to change the plot above so each bar 
