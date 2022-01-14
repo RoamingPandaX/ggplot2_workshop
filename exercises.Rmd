@@ -397,6 +397,7 @@ recreate the same panels present in the plot below by using `facet_wrap()`
 ggplot(mpg) + 
   geom_point(aes(x = displ, y = hwy)) + 
   facet_grid(year ~ drv)
+?facet_grid
 ```
 
 ### Coordinates
@@ -431,6 +432,7 @@ data
 ggplot(mpg) + 
   geom_bar(aes(x = class)) + 
   coord_cartesian(ylim = c(0, 40))
+?Coord
 ```
 
 #### Exercises
@@ -441,7 +443,10 @@ and then using `coord_trans()`. Compare the results — how do they differ?
 
 ```{r}
 ggplot(mpg) + 
-  geom_point(aes(x = hwy, y = displ))
+  geom_point(aes(x = hwy, y = displ)) +
+  coord_trans(y="log")
+?coord-trans
+
 ```
 
 * * *
@@ -477,8 +482,9 @@ change looks with a prebuild theme
 ```{r}
 ggplot(mpg) + 
   geom_bar(aes(y = class)) + 
-  facet_wrap(~year) + 
+  facet_wrap(~year) +
   theme_minimal()
+  
 ```
 
 Further adjustments can be done in the end to get exactly the look you want
@@ -523,7 +529,7 @@ ggplot(mpg) +
 
 ## Extensions
 While ggplot2 comes with a lot of batteries included, the extension ecosystem 
-provides priceless additinal features
+provides priceless additional features
 
 ### Plot composition
 We start by creating 3 separate plots
