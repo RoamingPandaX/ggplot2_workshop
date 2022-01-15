@@ -511,15 +511,16 @@ ggplot(mpg) +
 ```
 
 #### Exercises
-Themes can be overwhelming, especially as you often try to optimise for beauty 
+Themes can be overwhelming, especially as you often try to optimize for beauty 
 while you learn. To remove the last part of the equation, the exercise is to 
 take the plot given below and make it as hideous as possible using the theme
 function. Go absolutely crazy, but take note of the effect as you change 
 different settings.
 
 ```{r}
+?geom_bar
 ggplot(mpg) + 
-  geom_bar(aes(y = class, fill = drv)) + 
+  geom_bar(aes(y = class, fill = drv, ))+
   facet_wrap(~year) + 
   labs(title = "Number of car models per class",
        caption = "source: http://fueleconomy.gov",
