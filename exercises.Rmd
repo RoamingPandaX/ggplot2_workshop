@@ -96,7 +96,7 @@ ggplot(faithful) +
 Some geoms only need a single mapping and will calculate the rest for you
 
 ```{r}
-ggplot(faithful) + 
+ggplot(faithful) +
   geom_histogram(aes(x = eruptions))
 ```
 
